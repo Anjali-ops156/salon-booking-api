@@ -1,0 +1,130 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Salon Booking API",
+    "version": "1.0.0",
+    "description": "Salon appointment bookings, stored in Supabase."
+  },
+  "paths": {
+    "/api/appointments": {
+      "get": {
+        "summary": "List all appointments",
+        "responses": {
+          "200": {
+            "description": "List of bookings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Appointment" }
+                },
+                "example": [
+                  {
+                    "id": 1,
+                    "customer_name": "Anjali Sharma",
+                    "phone": "9876543210",
+                    "service": "Haircut",
+                    "stylist": "Simran",
+                    "appointment_time": "2026-09-25T14:30:00+00:00",
+                    "status": "confirmed",
+                    "created_at": "2026-09-22T09:12:00+00:00"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Book a new appointment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "customer_name",
+                  "phone",
+                  "service",
+                  "appointment_time"
+                ],
+                "properties": {
+                  "customer_name": { "type": "string", "example": "Anjali Sharma" },
+                  "phone": { "type": "string", "example": "9876543210" },
+                  "service": {
+                    "type": "string",
+                    "enum": [
+                      "Haircut",
+                      "Facial",
+                      "Hair Spa",
+                      "Manicure",
+                      "Pedicure",
+                      "Hair Colour"
+                    ],
+                    "example": "Haircut"
+                  },
+                  "stylist": {
+                    "type": "string",
+                    "example": "Simran",
+                    "description": "Optional. Khaali chhoda to 'Any' ho jayega."
+                  },
+                  "appointment_time": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-09-25T14:30:00Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Appointment booked",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Appointment" }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing required field",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "customer_name, phone, service and appointment_time are required"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Slot already booked",
+            "content": {
+              "application/json": {
+                "example": { "error": "That slot is already booked" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Appointment": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "customer_name": { "type": "string", "example": "Anjali Sharma" },
+          "phone": { "type": "string", "example": "9876543210" },
+          "service": { "type": "string", "example": "Haircut" },
+          "stylist": { "type": "string", "example": "Simran" },
+          "appointment_time": { "type": "string", "format": "date-time" },
+          "status": { "type": "string", "example": "confirmed" },
+          "created_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  }
+}

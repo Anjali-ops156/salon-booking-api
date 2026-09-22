@@ -1,0 +1,9 @@
+# Secrets — ye kabhi GitHub pe nahi jaane chahiye
+.env
+.env.local
+
+# Dependencies
+node_modules/
+
+# Vercel
+.vercel
